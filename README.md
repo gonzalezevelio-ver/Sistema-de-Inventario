@@ -14,13 +14,14 @@ Plataforma para el control de inventario, gestión de insumos, movimientos de st
 - **Nombre del proyecto**: Sistema de Inventario y Bodegas
 - **Descripción**: Aplicación para gestionar insumos, bodegas y movimientos de inventario, con capacidad de importación desde CSV, historial de movimientos y dashboard de indicadores.
 
-- **Responsable**: Evelio Gonzalez
-- **Repositorio**: [https://github.com/gonzalezevelio-ver]
 - **Fecha**: 2026-06-23
-- **Versión**: v1.0.0
+- **Versión**: v1.0.1
 
+- **Responsable**: Evelio Gonzalez
+- **GitHub**: [https://github.com/gonzalezevelio-ver]
 
-
+- **Colaborador**: Kevin Kasquez 
+- **GitHub**: [https://github.com/kevinvasaquezp-project]
 
 ## 2. Tecnologías
 
