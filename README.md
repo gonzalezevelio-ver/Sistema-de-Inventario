@@ -23,6 +23,10 @@ Plataforma para el control de inventario, gestión de insumos, movimientos de st
 - **Colaborador**: Kevin Kasquez 
 - **GitHub**: [https://github.com/kevinvasaquezp-project]
 
+- **Colaborador**: Alvaro Veliz  
+- **GitHub**: https://github.com/alvaroariel57-cmd
+
+
 ## 2. Tecnologías
 
 | Componente      | Tecnología                               |
