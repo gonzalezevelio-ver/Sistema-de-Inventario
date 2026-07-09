@@ -1,0 +1,456 @@
+/* ===================================================
+   VARIABLES (paleta de colores)
+   =================================================== */
+:root {
+    --sidebar-bg: #111827;
+    --navbar-bg: #1F2937;
+    --bg-main: #F8FAFC;
+    --card-bg: #FFFFFF;
+    --primary-gold: #D4AF37;
+    --primary-hover: #B8860B;
+    --success: #16A34A;
+    --warning: #F59E0B;
+    --danger: #DC2626;
+    --text-primary: #111827;
+    --text-secondary: #6B7280;
+    --border-color: #E5E7EB;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+    --radius: 10px;
+    --transition: 0.2s ease;
+}
+
+/* ===================================================
+   RESET & GLOBAL
+   =================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+}
+
+/* ===================================================
+   LAYOUT
+   =================================================== */
+.app-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background: var(--sidebar-bg);
+    color: #fff;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 0;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    padding: 0 1.5rem 2rem 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    color: #fff;
+}
+.sidebar-brand i {
+    color: var(--primary-gold);
+    font-size: 1.6rem;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1.5rem 0.75rem;
+}
+.sidebar-nav .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius);
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: var(--transition);
+}
+.sidebar-nav .nav-link i {
+    font-size: 1.15rem;
+    width: 1.5rem;
+    text-align: center;
+}
+.sidebar-nav .nav-link:hover,
+.sidebar-nav .nav-link.active {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+}
+.sidebar-nav .nav-link.active {
+    color: var(--primary-gold);
+}
+
+/* Main content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-main);
+}
+
+/* Top bar */
+.top-bar {
+    background: #fff;
+    padding: 0.9rem 2rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+.section-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+.date-badge {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    background: var(--bg-main);
+    padding: 0.3rem 0.9rem;
+    border-radius: 50px;
+    font-weight: 500;
+}
+
+/* Content area */
+.content-area {
+    padding: 2rem;
+    flex: 1;
+}
+
+/* ===================================================
+   BOTONES
+   =================================================== */
+.btn {
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0.45rem 1.1rem;
+    border-radius: 8px;
+    border: none;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.btn-primary {
+    background: var(--primary-gold);
+    color: #fff;
+}
+.btn-primary:hover {
+    background: var(--primary-hover);
+    color: #fff;
+}
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+.btn-outline:hover {
+    background: var(--bg-main);
+    border-color: #c5cbd2;
+}
+.btn-success {
+    background: var(--success);
+    color: #fff;
+}
+.btn-success:hover {
+    background: #15803d;
+    color: #fff;
+}
+.btn-danger {
+    background: var(--danger);
+    color: #fff;
+}
+.btn-danger:hover {
+    background: #b91c1c;
+    color: #fff;
+}
+.btn-sm {
+    padding: 0.25rem 0.7rem;
+    font-size: 0.8rem;
+}
+
+/* ===================================================
+   TARJETAS
+   =================================================== */
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    border: none;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    padding: 1.25rem 1.5rem;
+}
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.stats-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem 1.5rem;
+}
+.stats-card .icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+.stats-card .icon-box.gold { background: var(--primary-gold); }
+.stats-card .icon-box.warning { background: var(--warning); }
+.stats-card .icon-box.success { background: var(--success); }
+.stats-card .icon-box.danger { background: var(--danger); }
+
+.stats-card .info h4 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+.stats-card .info span {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* ===================================================
+   TABLAS
+   =================================================== */
+.table-container {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    padding: 0;
+}
+.table-container .table {
+    margin: 0;
+    font-size: 0.9rem;
+}
+.table-container .table thead th {
+    background: #f9fafb;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.8rem 1rem;
+}
+.table-container .table tbody td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+.table-container .table tbody tr:last-child td {
+    border-bottom: none;
+}
+.table-container .table tbody tr:hover {
+    background: #fafbfc;
+}
+
+.badge-stock {
+    display: inline-block;
+    padding: 0.25rem 0.7rem;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.badge-stock.normal {
+    background: #dcfce7;
+    color: #166534;
+}
+.badge-stock.bajo {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* ===================================================
+   FORMULARIOS
+   =================================================== */
+.form-panel {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 2rem;
+    max-width: 640px;
+    margin: 0 auto;
+}
+.form-panel .form-label {
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+.form-panel .form-control,
+.form-panel .form-select {
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    padding: 0.55rem 0.9rem;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+.form-panel .form-control:focus,
+.form-panel .form-select:focus {
+    border-color: var(--primary-gold);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+
+/* ===================================================
+   MODALES
+   =================================================== */
+.modal-content {
+    border: none;
+    border-radius: var(--radius);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.25rem 1.5rem;
+}
+.modal-header .modal-title {
+    font-weight: 600;
+}
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+}
+.modal-body {
+    padding: 1.5rem;
+}
+
+/* ===================================================
+   ALERTAS (Mensajes Django)
+   =================================================== */
+.alert {
+    border-radius: var(--radius);
+    border: none;
+    font-weight: 500;
+    padding: 0.9rem 1.25rem;
+}
+.alert-success {
+    background: #dcfce7;
+    color: #166534;
+}
+.alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+.alert-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* ===================================================
+   RESPONSIVE
+   =================================================== */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 70px;
+        padding: 1rem 0;
+    }
+    .sidebar-brand span {
+        display: none;
+    }
+    .sidebar-brand {
+        justify-content: center;
+        padding-bottom: 1.5rem;
+    }
+    .sidebar-nav .nav-link span {
+        display: none;
+    }
+    .sidebar-nav .nav-link {
+        justify-content: center;
+        padding: 0.7rem;
+    }
+    .sidebar-nav .nav-link i {
+        margin: 0;
+    }
+    .top-bar {
+        padding: 0.8rem 1rem;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .section-actions {
+        justify-content: flex-start;
+    }
+    .content-area {
+        padding: 1rem;
+    }
+    .stats-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    .form-panel {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .table-container .table {
+        font-size: 0.8rem;
+    }
+    .table-container .table thead th,
+    .table-container .table tbody td {
+        padding: 0.5rem 0.7rem;
+        /* ===================================================
+   (Mismo contenido anterior, solo añado al final)
+   =================================================== */
+
+/* Estadísticas centradas */
+.stats-card.text-center .info h4 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+.stats-card.text-center .info span {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+.stats-card {
+    padding: 1.25rem 0.5rem;
+}
+
+/* Tablas más compactas para el dashboard */
+.table-sm td, .table-sm th {
+    padding: 0.4rem 0.6rem;
+}
+    }
+}

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block section_title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card stats-card">
+            <div class="icon-box gold"><i class="bi bi-box-seam"></i></div>
+            <div class="info">
+                <h4>{{ stats.total_insumos|default:0 }}</h4>
+                <span>Total Insumos</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stats-card">
+            <div class="icon-box warning"><i class="bi bi-exclamation-triangle"></i></div>
+            <div class="info">
+                <h4>{{ stats.bajo_stock|default:0 }}</h4>
+                <span>Stock bajo mínimo</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stats-card">
+            <div class="icon-box success"><i class="bi bi-arrow-left-right"></i></div>
+            <div class="info">
+                <h4>{{ stats.movimientos_hoy|default:0 }}</h4>
+                <span>Movimientos hoy</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Últimos movimientos -->
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0 fw-semibold"><i class="bi bi-clock-history me-2"></i>Últimos movimientos</h5>
+                <a href="{% url 'historial' %}" class="btn btn-outline btn-sm">Ver todos</a>
+            </div>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Insumo</th>
+                            <th>Cantidad</th>
+                            <th>Bodega</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in stats.ultimos_movimientos %}
+                        <tr>
+                            <td>{{ m.fecha }}</td>
+                            <td>
+                                {% if m.tipo == 'entrada' %}
+                                    <span class="badge bg-success">Entrada</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Salida</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ m.insumo_nombre|default:'—' }}</td>
+                            <td>{{ m.cantidad }}</td>
+                            <td>{{ m.bodega_nombre|default:'—' }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="text-center text-muted">No hay movimientos recientes.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Insumos bajo stock -->
+    <div class="col-lg-5">
+        <div class="card">
+            <h5 class="fw-semibold mb-3"><i class="bi bi-exclamation-diamond me-2" style="color:var(--warning);"></i>Insumos con bajo stock</h5>
+            <div class="list-group list-group-flush">
+                {% for insumo in stats.insumos_bajo_stock %}
+                <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                    <div>
+                        <strong>{{ insumo.nombre }}</strong>
+                        <span class="text-muted ms-2">({{ insumo.unidad_medida }})</span>
+                    </div>
+                    <span class="badge bg-danger rounded-pill">{{ insumo.stock_total }} / {{ insumo.stock_minimo }}</span>
+                </div>
+                {% empty %}
+                <p class="text-muted mb-0">✅ Todos los insumos tienen stock suficiente.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block section_title %}Registrar Movimiento{% endblock %}
+{% block content %}
+<div class="form-panel">
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Tipo</label>
+            <select name="tipo" class="form-select" required>
+                <option value="entrada">Entrada</option>
+                <option value="salida">Salida</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Fecha</label>
+            <input type="date" name="fecha" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Cantidad</label>
+            <input type="number" name="cantidad" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Motivo</label>
+            <textarea name="motivo" class="form-control" rows="2"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Insumo</label>
+            <select name="insumo_id" class="form-select" required>
+                {% for i in insumos %}
+                <option value="{{ i.id }}">{{ i.nombre }} (stock: {{ i.stock_total }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Bodega</label>
+            <select name="bodega_id" class="form-select" required>
+                {% for b in bodegas %}
+                <option value="{{ b.id }}">{{ b.nombre }} - {{ b.ubicacion }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check2-circle me-1"></i>Registrar</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-outline">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
