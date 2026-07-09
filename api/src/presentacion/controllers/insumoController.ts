@@ -4,6 +4,7 @@ import { listarInsumos } from '../../usecases/listarInsumos';
 import { listarInsumosBajoStock } from '../../usecases/listarInsumosBajoStock';
 import { crearInsumo } from '../../usecases/crearInsumo';
 import { actualizarInsumo } from '../../usecases/actualizarInsumo';
+import { eliminarInsumo } from '../../usecases/eliminarInsumo'; // NUEVO
 import { importarInsumosCSV } from '../../usecases/importarInsumosCSV';
 import multer from 'multer';
 import path from 'path';
@@ -47,6 +48,20 @@ export const putInsumo = async (req: Request, res: Response) => {
     res.json(actualizado);
   } catch (error) {
     res.status(500).json({ error: 'Error al actualizar insumo' });
+  }
+};
+
+// NUEVO: Eliminar insumo
+export const deleteInsumo = async (req: Request, res: Response) => {
+  try {
+    const id = parseInt(req.params.id);
+    const eliminado = await eliminarInsumo(insumoRepo, id);
+    if (!eliminado) {
+      return res.status(404).json({ error: 'Insumo no encontrado' });
+    }
+    res.json({ message: 'Insumo eliminado correctamente' });
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
   }
 };
 

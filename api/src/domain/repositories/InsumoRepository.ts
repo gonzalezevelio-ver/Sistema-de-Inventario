@@ -7,4 +7,5 @@ export interface InsumoRepository {
   save(insumo: Insumo): Promise<Insumo>;
   update(id: number, insumo: Partial<Insumo>): Promise<Insumo | null>;
   updateStock(id: number, cantidadDelta: number): Promise<void>;
+  delete(id: number): Promise<boolean>;
 }
