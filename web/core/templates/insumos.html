@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% block section_title %}Insumos{% endblock %}
+{% block section_actions %}
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevo">
+    <i class="bi bi-plus-lg"></i> Nuevo Insumo
+</button>
+<button class="btn btn-outline" data-bs-toggle="modal" data-bs-target="#modalImportar">
+    <i class="bi bi-file-earmark"></i> Importar CSV
+</button>
+{% endblock %}
+
+{% block content %}
+
+<!-- ====== NUEVO: Barra de búsqueda ====== -->
+<div class="mb-3 d-flex justify-content-between align-items-center">
+    <div class="input-group" style="max-width: 350px;">
+        <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-search"></i>
+        </span>
+        <input type="text" id="buscarInsumo" class="form-control border-start-0" 
+               placeholder="Buscar por nombre o unidad..." aria-label="Buscar insumo">
+    </div>
+    <div>
+        <span class="text-muted small" id="contadorResultados">Mostrando {{ insumos|length }} insumos</span>
+    </div>
+</div>
+<!-- ====== Fin nuevo ====== -->
+
+<div class="table-container">
+    <table class="table" id="tablaInsumos">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Unidad</th>
+                <th>Stock</th>
+                <th>Stock Mínimo</th>
+                <th>Estado</th>
+                <th style="width:80px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for insumo in insumos %}
+            <tr data-id="{{ insumo.id }}">
+                <td>{{ insumo.id }}</td>
+                <td class="td-nombre">{{ insumo.nombre }}</td>
+                <td class="td-unidad">{{ insumo.unidad_medida }}</td>
+                <td>{{ insumo.stock_total }}</td>
+                <td>{{ insumo.stock_minimo }}</td>
+                <td>
+                    {% if insumo.stock_total < insumo.stock_minimo %}
+                        <span class="badge-stock bajo">Bajo stock</span>
+                    {% else %}
+                        <span class="badge-stock normal">Normal</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminar" data-id="{{ insumo.id }}" data-nombre="{{ insumo.nombre }}">
+                        <i class="bi bi-trash3"></i>
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" class="text-center text-muted">No hay insumos registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Nuevo Insumo -->
+<div class="modal fade" id="modalNuevo" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-plus-circle me-2"></i>Nuevo Insumo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" name="nombre" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Unidad de medida</label>
+                        <input type="text" name="unidad_medida" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Stock total</label>
+                        <input type="number" name="stock_total" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Stock mínimo</label>
+                        <input type="number" name="stock_minimo" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Importar CSV -->
+<div class="modal fade" id="modalImportar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{% url 'importar_insumos' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-file-earmark-spreadsheet me-2"></i>Importar CSV</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Archivo CSV (columnas: nombre, unidad_medida, stock_total, stock_minimo)</label>
+                        <input type="file" name="csv_file" class="form-control" accept=".csv" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Importar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill me-2" style="color:var(--danger);"></i>Confirmar eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar el insumo <strong id="eliminarNombre"></strong>?</p>
+                <p class="text-muted small">Esta acción no se puede deshacer y también eliminará todos los movimientos asociados.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Cancelar</button>
+                <form id="formEliminar" method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // --- JavaScript existente para el modal de eliminación ---
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalEliminar = document.getElementById('modalEliminar');
+        modalEliminar.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-id');
+            const nombre = button.getAttribute('data-nombre');
+            document.getElementById('eliminarNombre').textContent = nombre;
+            document.getElementById('formEliminar').action = "{% url 'eliminar_insumo' 0 %}".replace('0', id);
+        });
+
+        // ====== NUEVO: Filtro de búsqueda en tiempo real ======
+        const inputBuscar = document.getElementById('buscarInsumo');
+        const tabla = document.getElementById('tablaInsumos');
+        const contador = document.getElementById('contadorResultados');
+
+        if (inputBuscar && tabla) {
+            inputBuscar.addEventListener('input', function() {
+                const termino = this.value.trim().toLowerCase();
+                const filas = tabla.querySelectorAll('tbody tr');
+                let visibles = 0;
+
+                filas.forEach(fila => {
+                    // Obtener celdas de nombre y unidad (clases añadidas en el template)
+                    const celdaNombre = fila.querySelector('.td-nombre');
+                    const celdaUnidad = fila.querySelector('.td-unidad');
+                    
+                    if (celdaNombre && celdaUnidad) {
+                        const nombre = celdaNombre.textContent.toLowerCase();
+                        const unidad = celdaUnidad.textContent.toLowerCase();
+                        
+                        // Coincidencia si el término está en nombre O en unidad
+                        const coincide = termino === '' || nombre.includes(termino) || unidad.includes(termino);
+                        
+                        fila.style.display = coincide ? '' : 'none';
+                        if (coincide) visibles++;
+                    } else {
+                        // Si no tiene las clases, mostrar (fallback)
+                        fila.style.display = '';
+                        visibles++;
+                    }
+                });
+
+                // Actualizar contador
+                const total = filas.length;
+                contador.textContent = termino === '' 
+                    ? `Mostrando ${total} insumos` 
+                    : `Mostrando ${visibles} de ${total} insumos`;
+            });
+        }
+        // ====== Fin nuevo ======
+    });
+</script>
+{% endblock %}
+
+{% endblock %}   <!-- CIERRE DEL BLOQUE CONTENT -->

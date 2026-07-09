@@ -14,6 +14,8 @@ class APIClient:
                 resp = requests.post(url, json=data, timeout=10)
             elif method == 'PUT':
                 resp = requests.put(url, json=data, timeout=10)
+            elif method == 'DELETE':          # NUEVO
+                resp = requests.delete(url, timeout=10)
             else:
                 raise ValueError(f"Método no soportado: {method}")
             resp.raise_for_status()
@@ -34,6 +36,9 @@ class APIClient:
 
     def update_insumo(self, id, data):
         return self._request('PUT', f'/insumos/{id}', data)
+
+    def delete_insumo(self, id):              # NUEVO
+        return self._request('DELETE', f'/insumos/{id}')
 
     def import_insumos_csv(self, file):
         url = f"{self.BASE_URL}/insumos/import"

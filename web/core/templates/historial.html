@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% block section_title %}Historial de Movimientos{% endblock %}
+
+<!-- Eliminamos el bloque section_actions para no mostrar los filtros en la barra superior -->
+{% block section_actions %}{% endblock %}
+
+{% block content %}
+
+<!-- ====== BARRA DE FILTROS MEJORADA ====== -->
+<div class="card mb-3 p-3">
+    <form method="get" class="row g-2 align-items-end">
+        <!-- Ícono de lupa -->
+        <div class="col-auto">
+            <span class="h5 mb-0" style="color: var(--primary-gold);">
+                <i class="bi bi-search"></i>
+            </span>
+        </div>
+
+        <!-- Select de insumo -->
+        <div class="col-md-3">
+            <label for="insumo_id" class="form-label small text-muted">Insumo</label>
+            <select name="insumo_id" id="insumo_id" class="form-select form-select-sm">
+                <option value="">Todos</option>
+                {% for i in insumos %}
+                <option value="{{ i.id }}" {% if request.GET.insumo_id == i.id|stringformat:"s" %}selected{% endif %}>
+                    {{ i.nombre }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Fecha desde -->
+        <div class="col-md-3">
+            <label for="desde" class="form-label small text-muted">Desde</label>
+            <input type="date" name="desde" id="desde" class="form-control form-control-sm" 
+                   value="{{ request.GET.desde }}">
+        </div>
+
+        <!-- Fecha hasta -->
+        <div class="col-md-3">
+            <label for="hasta" class="form-label small text-muted">Hasta</label>
+            <input type="date" name="hasta" id="hasta" class="form-control form-control-sm" 
+                   value="{{ request.GET.hasta }}">
+        </div>
+
+        <!-- Botones -->
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary btn-sm w-100">
+                <i class="bi bi-funnel me-1"></i> Filtrar
+            </button>
+            <a href="{% url 'historial' %}" class="btn btn-outline btn-sm" title="Limpiar filtros">
+                <i class="bi bi-arrow-counterclockwise"></i>
+            </a>
+        </div>
+    </form>
+
+    <!-- ====== NUEVO: Botones de filtro por tipo y contador ====== -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-2 border-top">
+        <div class="d-flex gap-2">
+            <button id="btnEntradas" class="btn btn-outline-primary btn-sm" data-tipo="entrada">
+                <i class="bi bi-arrow-down-circle me-1"></i> Entradas
+            </button>
+            <button id="btnSalidas" class="btn btn-outline-primary btn-sm" data-tipo="salida">
+                <i class="bi bi-arrow-up-circle me-1"></i> Salidas
+            </button>
+        </div>
+        <div class="text-muted small" id="contadorHistorial">
+            Mostrando {{ movimientos|length }} movimientos
+            {% if request.GET.insumo_id or request.GET.desde or request.GET.hasta %}
+                <span class="badge bg-light text-dark ms-2">Filtros activos</span>
+            {% endif %}
+        </div>
+    </div>
+    <!-- ====== FIN NUEVO ====== -->
+</div>
+<!-- ====== FIN BARRA DE FILTROS ====== -->
+
+<!-- Tabla de movimientos -->
+<div class="table-container">
+    <table class="table" id="tablaHistorial">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Insumo</th>
+                <th>Cantidad</th>
+                <th>Bodega</th>
+                <th>Motivo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in movimientos %}
+            <!-- ====== NUEVO: data-tipo para filtrar ====== -->
+            <tr data-tipo="{{ m.tipo }}">
+                <td>{{ m.id }}</td>
+                <td>{{ m.fecha }}</td>
+                <td>
+                    {% if m.tipo == 'entrada' %}
+                        <span class="badge bg-success">Entrada</span>
+                    {% else %}
+                        <span class="badge bg-danger">Salida</span>
+                    {% endif %}
+                </td>
+                <td>{{ m.insumo_nombre|default:'—' }}</td>
+                <td>{{ m.cantidad }}</td>
+                <td>{{ m.bodega_nombre|default:'—' }}</td>
+                <td>{{ m.motivo|default:'—' }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" class="text-center text-muted">No hay movimientos con esos filtros.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ====== NUEVO: Filtro por tipo (Entradas / Salidas) ======
+        const btnEntradas = document.getElementById('btnEntradas');
+        const btnSalidas = document.getElementById('btnSalidas');
+        const tabla = document.getElementById('tablaHistorial');
+        const contador = document.getElementById('contadorHistorial');
+        let tipoActivo = null; // 'entrada', 'salida' o null (todos)
+
+        // Función para actualizar la tabla según el tipo activo
+        function aplicarFiltroTipo(tipo) {
+            const filas = tabla.querySelectorAll('tbody tr');
+            let visibles = 0;
+
+            filas.forEach(fila => {
+                const dataTipo = fila.getAttribute('data-tipo');
+                if (!dataTipo) {
+                    // Si no tiene data-tipo (p.ej. fila de "No hay movimientos"), la mostramos siempre
+                    fila.style.display = '';
+                    visibles++;
+                    return;
+                }
+
+                if (tipo === null || dataTipo === tipo) {
+                    fila.style.display = '';
+                    visibles++;
+                } else {
+                    fila.style.display = 'none';
+                }
+            });
+
+            // Actualizar contador
+            const total = filas.length;
+            if (tipo === null) {
+                contador.textContent = `Mostrando ${total} movimientos`;
+            } else {
+                const tipoTexto = tipo === 'entrada' ? 'Entrada' : 'Salida';
+                contador.textContent = `Mostrando ${visibles} movimientos de tipo ${tipoTexto}`;
+            }
+
+            // Actualizar estado visual de los botones
+            btnEntradas.classList.toggle('btn-primary', tipo === 'entrada');
+            btnEntradas.classList.toggle('btn-outline-primary', tipo !== 'entrada');
+            btnSalidas.classList.toggle('btn-primary', tipo === 'salida');
+            btnSalidas.classList.toggle('btn-outline-primary', tipo !== 'salida');
+        }
+
+        // Evento para botón Entradas
+        btnEntradas.addEventListener('click', function() {
+            if (tipoActivo === 'entrada') {
+                // Si ya está activo, lo desactivamos (mostrar todos)
+                tipoActivo = null;
+            } else {
+                tipoActivo = 'entrada';
+            }
+            aplicarFiltroTipo(tipoActivo);
+        });
+
+        // Evento para botón Salidas
+        btnSalidas.addEventListener('click', function() {
+            if (tipoActivo === 'salida') {
+                tipoActivo = null;
+            } else {
+                tipoActivo = 'salida';
+            }
+            aplicarFiltroTipo(tipoActivo);
+        });
+
+        // Estado inicial: sin filtro activo
+        aplicarFiltroTipo(null);
+        // ====== FIN NUEVO ======
+    });
+</script>
+{% endblock %}
+
+{% endblock %}
