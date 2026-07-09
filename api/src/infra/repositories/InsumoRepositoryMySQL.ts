@@ -47,4 +47,10 @@ export class InsumoRepositoryMySQL implements InsumoRepository {
   async updateStock(id: number, cantidadDelta: number): Promise<void> {
     await pool.query('UPDATE insumos SET stock_total = stock_total + ? WHERE id = ?', [cantidadDelta, id]);
   }
+
+  // NUEVO
+  async delete(id: number): Promise<boolean> {
+    const [result] = await pool.query<ResultSetHeader>('DELETE FROM insumos WHERE id = ?', [id]);
+    return result.affectedRows > 0;
+  }
 }
