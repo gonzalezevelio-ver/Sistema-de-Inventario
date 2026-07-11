@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block section_title %}Ayuda{% endblock %}
+{% block content %}
+<div class="card p-4">
+    <div class="row g-4">
+        <div class="col-md-6">
+            <h5><i class="bi bi-grid-1x2 me-2" style="color:var(--primary-gold);"></i>Dashboard</h5>
+            <p>Resumen rápido: total de insumos, alertas de stock bajo y movimientos del día.</p>
+            <hr>
+            <h5><i class="bi bi-cubes me-2" style="color:var(--primary-gold);"></i>Insumos</h5>
+            <p>Lista completa de insumos con stock. Puedes agregar nuevos o importar desde CSV.</p>
+            <p><strong>Formato CSV:</strong> <code>nombre, unidad_medida, stock_total, stock_minimo</code></p>
+            <hr>
+            <h5><i class="bi bi-arrow-left-right me-2" style="color:var(--primary-gold);"></i>Movimientos</h5>
+            <p>Registra entradas y salidas. El sistema valida que no haya stock negativo.</p>
+        </div>
+        <div class="col-md-6">
+            <h5><i class="bi bi-clock-history me-2" style="color:var(--primary-gold);"></i>Historial</h5>
+            <p>Consulta todos los movimientos filtrados por insumo y rango de fechas.</p>
+            <hr>
+            <h5><i class="bi bi-question-circle me-2" style="color:var(--primary-gold);"></i>¿Cómo eliminar un insumo?</h5>
+            <p>En la tabla de insumos, haz clic en el botón rojo con el ícono de basura. Confirma en el modal para eliminar el insumo y todos sus movimientos asociados.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
